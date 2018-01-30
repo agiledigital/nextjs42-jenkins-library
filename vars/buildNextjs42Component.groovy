@@ -35,10 +35,6 @@ def call(Map config) {
       yarn 'install'
     }
 
-    stage('Clean') {
-      yarn 'clean'
-    }
-
     stage('Test') {
       yarn 'test --ci --testResultsProcessor="jest-junit"'
       junit "${config.baseDir}/junit.xml"
