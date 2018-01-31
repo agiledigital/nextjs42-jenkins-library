@@ -72,7 +72,7 @@ def call(Map config) {
         sh "cp -r \"${config.baseDir}/.next\" ${artifactDir}"
         sh "cp -r \"${config.baseDir}/node_modules\" ${artifactDir}"
         sh "cp -r \"${config.baseDir}/conf\" ${artifactDir}"
-        sh "cp -r \"${config.baseDir}/static\" ${artifactDir}"
+        sh "cp -r \"${config.baseDir}/src/static\" ${artifactDir}"
       }
     }
 
