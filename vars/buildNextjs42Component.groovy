@@ -45,6 +45,20 @@ def call(Map config) {
   if(config.stage == 'dist') {
 
     container('nextjs42-builder') {
+      stage('Inject configuration') {
+        sh """
+        |# Insert the project.conf, environment.conf, etc into the deployable.
+        |cp *.conf "${config.baseDir}/conf"
+        |
+        |# Create the conf file that ties the client.conf and environment.conf together.
+        |echo 'include "client.conf"' > "${config.baseDir}/conf/combined.conf"
+        |echo 'include "environment.conf"' >> "${config.baseDir}/conf/combined.conf"
+        |
+        |cat "${config.baseDir}/conf/combined.conf"
+        |
+        |""".stripMargin()
+      }
+
       stage('Build artifacts') {
         yarn 'build'
       }
@@ -57,6 +71,8 @@ def call(Map config) {
         sh "mkdir -p ${artifactDir}"
         sh "cp -r \"${config.baseDir}/.next\" ${artifactDir}"
         sh "cp -r \"${config.baseDir}/node_modules\" ${artifactDir}"
+        sh "cp -r \"${config.baseDir}/conf\" ${artifactDir}"
+        sh "cp -r \"${config.baseDir}/static\" ${artifactDir}"
       }
     }
 
